@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>绘制音频波形图</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <!-- <h1>绘制音频波形图</h1> -->
+    <video id="myVideo" controls style="width: 400px; height: 300px;">
+        <source src="../images/1.mp4" type="audio/mpeg">
+    </video>
+    <canvas id="waveformCanvas"></canvas>
+    <script>
+        // 获取video元素和canvas元素
+        let video, analyser, ctx, canvas, audioContext, timerID, checktimerID, analyserNode;
+        var hasUserInteracted = false;
+        video = document.getElementById('myVideo');
+        //获取画布元素
+        canvas = document.getElementById('waveformCanvas');
+        ctx = canvas.getContext('2d');
+        video.muted = true;
+        video.autoplay = true;
+        video.controls = true;
+        // 监听键盘按下事件
+        function handleUserInteraction() {
+            console.log("user has interacted");
+            hasUserInteracted = true;
+        }
+        document.addEventListener('click', handleUserInteraction);
+        checktimerID = setInterval(checkMouseClick, 1000);
+        setTimeout(function () { video.addEventListener("volumechange", handleUserInteraction); }, 2000);
+        //定时检测鼠标事件,开启带声音的播放
+        function checkMouseClick() {
+            if (hasUserInteracted) {
+                initWaveDraw();
+                video.muted = false;
+                video.play();
+                clearInterval(checktimerID);
+            }
+        }
+        function initWaveDraw() {
+            // 创建音频上下文
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioContext.createAnalyser();
+                analyser.connect(audioContext.destination);
+                analyserNode = audioContext.createMediaElementSource(video);
+                analyserNode.connect(analyser);
+                // timerID = setInterval(drawWaveform, 200);
+            }
+        }
+        // // 绘制波形图
+        // function drawWaveform() {
+        //     // 获取波形数据
+        //     var bufferLength = analyser.fftSize;
+        //     console.log("drawing wave");
+        //     var dataArray = new Uint8Array(bufferLength);
+        //     analyser.getByteTimeDomainData(dataArray);
+        //     // 清空画布
+        //     ctx.clearRect(0, 0, canvas.width, canvas.height);
+        //     // 绘制波形图
+        //     ctx.lineWidth = 2;
+        //     ctx.strokeStyle = 'rgb(0, 255, 255)';
+        //     ctx.beginPath();
+        //     var sliceWidth = canvas.width * 1.0 / bufferLength;
+        //     var x = 0;
+        //     for (var i = 0; i < bufferLength; i++) {
+        //         var v = dataArray[i] / 128.0;
+        //         var y = v * canvas.height / 2;
+        //         if (i === 0) {
+        //             ctx.moveTo(x, y);
+        //         } else {
+        //             ctx.lineTo(x, y);
+        //         }
+        //         x += sliceWidth;
+        //     }
+        //     ctx.lineTo(canvas.width, canvas.height / 2);
+        //     ctx.stroke();
+        // }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>当前时间</title>
+    <script>
+        function updateClock() {
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = now.getMonth() + 1; // 月份是从0开始的
+            var day = now.getDate();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var seconds = now.getSeconds();
+
+            // 如果数字不足两位，前面补零
+            month = (month < 10 ? "0" : "") + month;
+            day = (day < 10 ? "0" : "") + day;
+            hours = (hours < 10 ? "0" : "") + hours;
+            minutes = (minutes < 10 ? "0" : "") + minutes;
+            seconds = (seconds < 10 ? "0" : "") + seconds;
+
+            // 更新显示的时间
+            document.getElementById('date-time').textContent = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+
+            // 每秒更新时间
+            setTimeout(updateClock, 1000);
+        }
+
+        // 页面加载完成后开始更新时间
+        window.onload = function () {
+            updateClock();
+        };
+    </script>
+</head>
+
+<body>
+    <div id="date-time">加载中...</div>
+</body>
+
+</html>
